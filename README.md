@@ -3,6 +3,53 @@ Self-Driving Car Engineer Nanodegree Program
 
 ---
 
+Model Predictive Control is another control method widely used in the self driving car world along with the PID controller. Model predictive control, as shown in the name, uses the kinematic model of the system to determine how the system should react and perform. In this case, we are provide with a trajectory that the vehicle should follow. Then we are determining how the actuator should move that can provide us with the optimal cost. In this case, cost can be whatever we defined, which will be discussed below.
+
+## The model
+
+State
+
+The model that I am using in the project contain the state x, y, psi, and v. State x, y represent the vehicle coordinate. State psi represent the orientation of the vehicle. State v represent the speed of the car. 
+
+Actuators
+
+In this model, there are 2 actuators (delta and a). Delta is the actuator that controls the steering angle and a is the actuator that controls the acceleration of the vehicle.
+
+Equations 
+
+The equations used here are the simple kinematic equation derived from the lectures.
+<img width="228" alt="screen shot 2017-06-20 at 9 02 29 pm" src="https://user-images.githubusercontent.com/22971963/27366576-e321a926-55fb-11e7-8bd4-725fdef36900.png">
+
+Additionally, we also calculate the cross track error and the error is orientation based on the reference trajectory and the 
+current states of the vehicle.
+
+Cost functions
+
+Here are the breakdown of what I used as a cost function:
+* cte - how far it is from the desired position
+* epsi - how different it is from the desired orientation
+* v - how far it is from the reference velocity (which in this case is 50)
+* delta - minimize the movement of steering actuator
+* a - minimize the acceleration actuator
+* d_delta - minimize the sequential actuations of steering
+* d_a - minimize the sequentual acceleration actuator
+
+In order to tune the scaling factor of these contribution, I first give cte and epsi a high contribution, as one of the major goal for a self driving car is to follow the trajectory. If the car is off the trajectory, the vehicle might crash into another car or start driving at an dangerous area. Once I have those gain set, I observed what kind of behavior the simulation is giving me. For instance, if I observe that the car is oscilliating a lot, then I will give delta and d_delta a higher contribution. Then using those gain, I will observe the behavior in the simulator. I keep repeating that process until I get to a point where I am content with the performance. When tuning this, I treat safety as a higher priority than passenger comfort, therefore the contribution of cte and epsi is higher than the rest. 
+
+## Timestep Length and Elapsed Duration (N and dt)
+
+Another set of parameters that we can pick is the timestep length and elapsed duration. when picking these number, we need to find a good balance. If we have a small dt, we will have higher precision but we also need higher computation time. If we have a large N, we can predict further into the future but we ignore many of the outside influence to the system. In this case, I picked N to be 10 and dt to be 0.15. This will allow us to predict 1.5s to the future. Since we want the self driving car to be able to react in real time, we want to have values that will give both good precision and computation performance.
+
+## Polynomial Fitting and MPC Preprocessing
+
+I decided to fit a 3rd order polynomial to the way point becasue we know that the road will have curvature to it, therefore we will need a least a 2nd order polynomial function to describe that.
+
+For the Preprocessing step, we have to convert all the waypoints from the global coordinate view into the vehicle coordinate system, since the result is calculated from the vehicle's point of view.
+
+## Model Predictive Control with Latency
+
+In a real car, there is always latency assoicated with the system, meaning that the command doesn't get executed right away. This will cause a problem in which the vehicle might be at a different state when the actuator command is actually being executed. This can cause error and even instability. In this case, we are modeling the latency to the simulator by focusing the thread to sleep for 100ms in order to see the most real performance of the system.
+
 ## Dependencies
 
 * cmake >= 3.5
