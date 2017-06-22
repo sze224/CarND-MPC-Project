@@ -52,13 +52,13 @@ class FG_eval {
     fg[0] = 0;
 
     // coef to show the important of each cost
-    int cte_coef = 90;
-    int epsi_coef = 90;
-    int v_coef = 10; 
-    int delta_coef = 50;
-    int a_coef = 30;
-    int d_delta_coef = 30;
-    int d_a_coef = 20;
+    int cte_coef = 50;
+    int epsi_coef = 50;
+    int v_coef = 5; 
+    int delta_coef = 5;
+    int a_coef = 5;
+    int d_delta_coef = 5;
+    int d_a_coef = 5;
 
 
     // Cost based on the reference state
