@@ -18,7 +18,7 @@ In this model, there are 2 actuators (delta and a). Delta is the actuator that c
 Equations 
 
 The equations used here are the simple kinematic equation derived from the lectures.
-<img width="228" alt="screen shot 2017-06-20 at 9 02 29 pm" src="https://user-images.githubusercontent.com/22971963/27366576-e321a926-55fb-11e7-8bd4-725fdef36900.png">
+![alt](https://github.com/sze224/CarND-MPC-Project/blob/master/Equations.png)
 
 
 Additionally, we also calculate the cross track error and the error is orientation based on the reference trajectory and the 
